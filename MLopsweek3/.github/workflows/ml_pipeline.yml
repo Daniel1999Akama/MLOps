@@ -1,0 +1,35 @@
+name: ML Pipeline CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  train-model:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install scikit-learn
+
+    - name: Run training script
+      run: |
+        python train.py
+
+    - name: Upload trained model
+      uses: actions/upload-artifact@v3
+      with:
+        name: iris-model
+        path: iris_model.pkl
